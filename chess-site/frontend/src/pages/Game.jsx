@@ -76,12 +76,6 @@ const Game = () => {
             socket.onmessage = (event) => {
                 const message = event.data;
                 if (message.startsWith("move:")) {
-                    const moveSan = message.split(":")[1];
-                    setGame(g => {
-                        const update = new Chess(g.fen());
-                        update.move(moveSan);
-                        return update;
-                    });
                     fetchGame();
                 } else if (message === "player_joined") {
                     toast.success("Player joined!");
@@ -112,59 +106,47 @@ const Game = () => {
         }
     };
 
-    const onDrop = async (sourceSquare, targetSquare) => {
-        alert(`onDrop вызвана! ${sourceSquare} -> ${targetSquare}`);
-        console.log("=== onDrop CALLED ===", { sourceSquare, targetSquare, game: game.fen() });
+    const onDrop = (sourceSquare, targetSquare) => {
+        const gameCopy = new Chess(game.fen());
+        const move = gameCopy.move({
+            from: sourceSquare,
+            to: targetSquare,
+            promotion: 'q', // Always promote to queen for simplicity
+        });
 
-        try {
-            // Try to make the move locally to validate it
-            const move = game.move({
-                from: sourceSquare,
-                to: targetSquare,
-                promotion: 'q', // Always promote to queen for simplicity
-            });
-
-            // If move is null, it's illegal
-            if (move === null) {
-                console.log("Illegal move attempted:", sourceSquare, "to", targetSquare);
-                return false;
-            }
-
-            // Move is legal locally, now send to backend
-            console.log("Valid move:", move.san);
-
-            try {
-                await gameAPI.makeMove(id, move.san);
-
-                // Clear highlights after successful move
-                setSelectedSquare(null);
-                setLegalMoves([]);
-
-                // Update the local state
-                setGame(new Chess(game.fen()));
-
-                // Refresh game state from backend
-                fetchGame();
-
-                toast.success(`Move: ${move.san}`);
-                return true;
-            } catch (apiError) {
-                // Backend rejected the move, revert local state
-                console.error("Backend rejected move:", apiError);
-                game.undo();
-                setGame(new Chess(game.fen()));
-
-                const errorMsg = apiError.response?.data?.detail || "Move rejected by server";
-                toast.error(errorMsg);
-                return false;
-            }
-        } catch (error) {
-            console.error("Error in onDrop:", error);
-            toast.error("Failed to make move");
+        // If the move is illegal, return false and do nothing.
+        if (move === null) {
             return false;
         }
-    };
 
+        const previousFen = game.fen();
+
+        // Optimistically update the local state.
+        setGame(gameCopy);
+
+        // Clear highlights after the move.
+        setSelectedSquare(null);
+        setLegalMoves([]);
+
+        // Send the move to the backend.
+        gameAPI.makeMove(id, move.san)
+            .then(() => {
+                // The move was successful.
+                toast.success(`Move: ${move.san}`);
+                // The websocket will trigger a fetchGame, so we don't need to do it here.
+            })
+            .catch((apiError) => {
+                // The backend rejected the move. Revert the local state.
+                console.error("Backend rejected move:", apiError);
+                setGame(new Chess(previousFen));
+                const errorMsg = apiError.response?.data?.detail || "Move rejected by server";
+                toast.error(errorMsg);
+            });
+
+        // Return true to indicate a successful drop. 
+        return true;
+    };
+    
     const onSquareClick = (square) => {
         // If clicking the same square, deselect
         if (selectedSquare === square) {
@@ -225,8 +207,8 @@ const Game = () => {
                         <Chessboard
                             position={game.fen()}
                             boardOrientation={boardOrientation}
-                            customDarkSquareStyle={{ backgroundColor: '#000000' }}
-                            customLightSquareStyle={{ backgroundColor: '#ffffff' }}
+                            customDarkSquareStyle={{ backgroundColor: '#B88762' }}
+                            customLightSquareStyle={{ backgroundColor: '#EED2B6' }}
                             customBoardStyle={{ borderRadius: '0' }}
                             isDraggablePiece={({ piece }) => {
                                 if (!gameState || gameState.status !== 'active') {
@@ -262,6 +244,7 @@ const Game = () => {
                                 return false;
                             }}
                             onPieceDrop={onDrop}
+                            onSquareClick={onSquareClick}
                         />
                     </div>
                 </div>
