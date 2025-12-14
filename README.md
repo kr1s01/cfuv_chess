@@ -12,11 +12,26 @@
    Create a database named `chess_db`.
    Update the `DATABASE_URL` in `database.py` if your credentials differ from `postgres:password@localhost`.
 
-3. **Run**
+
+3. **Run Backend**
    ```bash
    cd chess-site/backend
    uvicorn main:app --reload
    ```
+
+## Frontend Setup
+
+1. **Install Dependencies**
+   ```bash
+   cd chess-site/frontend
+   npm install
+   ```
+
+2. **Run Frontend**
+   ```bash
+   npm run dev
+   ```
+   The application will be available at `http://localhost:5173` (or the port shown in the terminal).
 
 ## Endpoints
 

@@ -1,16 +1,24 @@
-# React + Vite
+# Chess App Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the University Chess Rating System. It connects to the FastAPI backend to provide a seamless chess playing experience.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Authentication**: Login and Register.
+- **Game Interface**: Interactive chessboard with drag-and-drop.
+- **Real-time Updates**: Uses WebSockets to sync game state.
+- **Game History**: View past games and move logs.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React**: UI Library.
+- **Vite**: Build tool.
+- **Chess.js**: Chess logic validation.
+- **React-Chessboard**: Visual board component.
+- **Axios**: API requests.
+- **TailwindCSS** (or custom CSS): Styling.
 
-## Expanding the ESLint configuration
+## getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. `npm install`
+2. `npm run dev`
