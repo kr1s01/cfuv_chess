@@ -27,7 +27,7 @@ const Navbar = () => {
                     gap: '0.5rem',
                     textDecoration: 'none'
                 }}>
-                    <span style={{ fontSize: '1.8rem' }}>♟</span> kChess
+                    <span style={{ fontSize: '1.8rem' }}>♟</span> EjudgeChess
                 </Link>
                 <div className="flex gap-4 items-center">
                     {user ? (

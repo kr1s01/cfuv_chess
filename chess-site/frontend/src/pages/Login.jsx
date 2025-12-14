@@ -27,7 +27,7 @@ const Login = () => {
         <div className="flex items-center justify-center" style={{ minHeight: '80vh' }}>
             <div className="retro-card" style={{ width: '100%', maxWidth: '400px' }}>
                 <div className="retro-title-bar">
-                    <span>Login.kchess</span>
+                    <span>Login.EjudgeChess</span>
                     <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{ width: '12px', height: '12px', border: '2px solid black', background: 'white' }}></div>
                     </div>
