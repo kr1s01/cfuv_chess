@@ -58,7 +58,6 @@ const Game = () => {
             const socket = new WebSocket(wsUrl);
 
             socket.onopen = () => {
-                console.log('WS Connected');
                 setIsConnected(true);
             };
 
@@ -66,7 +65,6 @@ const Game = () => {
                 console.error('WebSocket error:', error);
                 // Don't retry if we already have too many attempts
                 if (retryCount < 3) {
-                    console.log(`WebSocket connection failed, retrying... (attempt ${retryCount + 1}/3)`);
                     setTimeout(() => {
                         connectWebSocket(retryCount + 1);
                     }, 1000 * (retryCount + 1)); // Exponential backoff: 1s, 2s, 3s
@@ -84,11 +82,9 @@ const Game = () => {
             };
 
             socket.onclose = (event) => {
-                console.log('WebSocket closed:', event.code, event.reason);
                 setIsConnected(false);
                 // Only retry on abnormal closure (not user-initiated)
                 if (event.code !== 1000 && retryCount < 3) {
-                    console.log(`WebSocket closed unexpectedly, retrying... (attempt ${retryCount + 1}/3)`);
                     setTimeout(() => {
                         connectWebSocket(retryCount + 1);
                     }, 1000 * (retryCount + 1));
@@ -146,7 +142,7 @@ const Game = () => {
         // Return true to indicate a successful drop. 
         return true;
     };
-    
+
     const onSquareClick = (square) => {
         // If clicking the same square, deselect
         if (selectedSquare === square) {
@@ -212,11 +208,9 @@ const Game = () => {
                             customBoardStyle={{ borderRadius: '0' }}
                             isDraggablePiece={({ piece }) => {
                                 if (!gameState || gameState.status !== 'active') {
-                                    console.log("Drag blocked: Game not active", gameState?.status);
                                     return false;
                                 }
                                 if (!user) {
-                                    console.log("Drag blocked: No user");
                                     return false;
                                 }
 
@@ -226,21 +220,16 @@ const Game = () => {
                                 const isTurn = (game.turn() === 'w' && isWhitePlayer) || (game.turn() === 'b' && isBlackPlayer);
 
                                 if (!isTurn) {
-                                    // reducing log noise, but useful for debugging once
-                                    // console.log("Drag blocked: Not your turn", { turn: game.turn(), isWhitePlayer, isBlackPlayer });
                                     return false;
                                 }
 
                                 if (isWhitePlayer && isWhitePiece) {
-                                    console.log("✓ Piece IS draggable:", piece);
                                     return true;
                                 }
                                 if (isBlackPlayer && !isWhitePiece) {
-                                    console.log("✓ Piece IS draggable:", piece);
                                     return true;
                                 }
 
-                                console.log("Drag blocked: Wrong piece color", { user: user.id, piece, white: gameState.white_player_id, black: gameState.black_player_id });
                                 return false;
                             }}
                             onPieceDrop={onDrop}
@@ -280,23 +269,7 @@ const Game = () => {
                         Current Turn: {game.turn() === 'w' ? 'WHITE' : 'BLACK'}
                     </div>
 
-                    {/* DEBUG PANEL */}
-                    <div style={{ marginTop: '2rem', border: '2px solid red', padding: '0.5rem', fontSize: '0.7rem', fontFamily: 'monospace', background: '#fff0f0' }}>
-                        <div style={{ fontWeight: 'bold', color: 'red' }}>DEBUG_MODE_ACTIVE</div>
-                        <div>My User ID: {user?.id}</div>
-                        <div>White ID: {gameState.white_player_id}</div>
-                        <div>Black ID: {gameState.black_player_id}</div>
-                        <div>Turn: {game.turn()}</div>
-                        <div>FEN: {game.fen().substring(0, 30)}...</div>
-                        <div>Is Draggable: {
-                            (!gameState || gameState.status !== 'active') ? "NO (Not Active)" :
-                                (!user) ? "NO (No User)" :
-                                    (game.turn() === 'w' && user.id !== gameState.white_player_id) ? "NO (Not White's Turn)" :
-                                        (game.turn() === 'b' && user.id !== gameState.black_player_id) ? "NO (Not Black's Turn)" :
-                                            "YES (Check Color)"
-                        }</div>
-                        <button onClick={() => window.location.reload()} style={{ marginTop: '0.5rem', border: '1px solid black', padding: '2px 5px', cursor: 'pointer' }}>FORCE RELOAD</button>
-                    </div>
+
                 </div>
             </div>
         </div>

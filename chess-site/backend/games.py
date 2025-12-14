@@ -95,22 +95,15 @@ async def make_move(game_id: int, move: schemas.MoveCreate, current_user: models
     is_white = game.white_player_id == current_user.id
     is_black = game.black_player_id == current_user.id
     
-    print(f"DEBUG: Move request. GameID={game_id}, UserID={current_user.id}, Move={move.san}")
-    print(f"DEBUG: User is White: {is_white}, User is Black: {is_black}")
-
     if not (is_white or is_black):
-        print("DEBUG: User not a player")
         raise HTTPException(status_code=403, detail="Not a player in this game")
 
     board = chess.Board(game.fen)
-    print(f"DEBUG: Current Turn: {board.turn} (True=White), FEN: {game.fen}")
     
     # Check turn
     if board.turn == chess.WHITE and not is_white:
-         print("DEBUG: It's White's turn but user is not White")
          raise HTTPException(status_code=400, detail="Not your turn")
     if board.turn == chess.BLACK and not is_black:
-         print("DEBUG: It's Black's turn but user is not Black")
          raise HTTPException(status_code=400, detail="Not your turn")
 
     try:
@@ -120,11 +113,9 @@ async def make_move(game_id: int, move: schemas.MoveCreate, current_user: models
              # Try UCI if SAN fails (though prompt said move validation)
              chess_move = board.parse_uci(move.san)
         except ValueError:
-             print(f"DEBUG: Invalid move format: {move.san}")
              raise HTTPException(status_code=400, detail="Invalid move format")
 
     if chess_move not in board.legal_moves:
-        print(f"DEBUG: Illegal move: {move.san}. Legal moves: {[m.san() for m in board.legal_moves]}")
         raise HTTPException(status_code=400, detail="Illegal move")
 
     board.push(chess_move)
