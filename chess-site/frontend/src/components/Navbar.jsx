@@ -33,6 +33,7 @@ const Navbar = () => {
                     {user ? (
                         <>
                             <span style={{ fontWeight: 'bold' }}>Hello, {user.username} ({user.rating})</span>
+                            <a href="/leaderboard" className="retro-btn">Leaderboard</a>
                             <a href="/dashboard" className="retro-btn">Dashboard</a>
                             <button onClick={handleLogout} className="retro-btn">Logout</button>
                         </>

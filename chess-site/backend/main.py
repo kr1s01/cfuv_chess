@@ -46,7 +46,14 @@ async def register(user: schemas.UserCreate, db: AsyncSession = Depends(database
     new_user = models.User(email=user.email, username=user.username, hashed_password=hashed)
     db.add(new_user)
     await db.commit()
-    await db.refresh(new_user)
+    # Eager load relationships for the response
+    from sqlalchemy.orm import selectinload
+    result = await db.execute(
+        select(models.User)
+        .filter(models.User.id == new_user.id)
+        .options(selectinload(models.User.games_white), selectinload(models.User.games_black))
+    )
+    new_user = result.scalars().first()
     return new_user
 
 @app.post("/login", response_model=schemas.Token)
@@ -68,7 +75,14 @@ async def read_users_me(current_user: models.User = Depends(auth.get_current_use
 
 @app.get("/ratings", response_model=List[schemas.UserOut])
 async def get_ratings(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(database.get_db)):
-    result = await db.execute(select(models.User).order_by(models.User.rating.desc()).offset(skip).limit(limit))
+    from sqlalchemy.orm import selectinload
+    result = await db.execute(
+        select(models.User)
+        .options(selectinload(models.User.games_white), selectinload(models.User.games_black))
+        .order_by(models.User.rating.desc())
+        .offset(skip)
+        .limit(limit)
+    )
     return result.scalars().all()
 
 @app.get("/users/{user_id}/history", response_model=List[schemas.GameOut])

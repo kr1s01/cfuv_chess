@@ -56,3 +56,7 @@ export const gameAPI = {
     makeMove: (gameId, san) => api.post(`/games/${gameId}/move`, { san }),
     getHistory: (gameId) => api.get(`/games/${gameId}/history`),
 };
+
+export const userAPI = {
+    getRatings: () => api.get('/ratings'),
+};

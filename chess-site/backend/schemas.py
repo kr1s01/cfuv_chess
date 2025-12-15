@@ -16,6 +16,7 @@ class UserLogin(BaseModel):
 class UserOut(UserBase):
     id: int
     rating: int
+    games_played: int = 0
     created_at: datetime
     last_active: Optional[datetime]
 

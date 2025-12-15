@@ -55,7 +55,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
     except JWTError:
         raise credentials_exception
     
-    result = await db.execute(select(models.User).filter(models.User.username == token_data.username))
+    from sqlalchemy.orm import selectinload
+    result = await db.execute(
+        select(models.User)
+        .filter(models.User.username == token_data.username)
+        .options(selectinload(models.User.games_white), selectinload(models.User.games_black))
+    )
     user = result.scalars().first()
     if user is None:
         raise credentials_exception

@@ -17,6 +17,10 @@ class User(Base):
     games_white = relationship("Game", back_populates="white_player", foreign_keys="Game.white_player_id")
     games_black = relationship("Game", back_populates="black_player", foreign_keys="Game.black_player_id")
 
+    @property
+    def games_played(self):
+        return len(self.games_white) + len(self.games_black)
+
 class Game(Base):
     __tablename__ = "games"
 
