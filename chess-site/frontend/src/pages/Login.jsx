@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import RetroCard from '../components/common/RetroCard';
+import RetroButton from '../components/common/RetroButton';
 
 const Login = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
@@ -25,13 +27,17 @@ const Login = () => {
 
     return (
         <div className="flex items-center justify-center" style={{ minHeight: '80vh' }}>
-            <div className="retro-card" style={{ width: '100%', maxWidth: '400px' }}>
-                <div className="retro-title-bar">
-                    <span>Login.EjudgeChess</span>
-                    <div style={{ display: 'flex', gap: '4px' }}>
-                        <div style={{ width: '12px', height: '12px', border: '2px solid black', background: 'white' }}></div>
+            <RetroCard
+                style={{ width: '100%', maxWidth: '400px' }}
+                title={
+                    <div className="flex justify-between items-center w-full">
+                        <span>Login.EjudgeChess</span>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                            <div style={{ width: '12px', height: '12px', border: '2px solid black', background: 'white' }}></div>
+                        </div>
                     </div>
-                </div>
+                }
+            >
 
                 <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', fontFamily: 'inherit' }}>
                     AUTHENTICATION
@@ -58,14 +64,14 @@ const Login = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="retro-btn primary" disabled={isLoading} style={{ marginTop: '1rem' }}>
+                    <RetroButton type="submit" disabled={isLoading} style={{ marginTop: '1rem' }}>
                         {isLoading ? 'LOADING...' : 'ENTER SYSTEM'}
-                    </button>
+                    </RetroButton>
                 </form>
                 <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
                     NO ACCESS? <Link to="/register">REGISTER_USER.EXE</Link>
                 </div>
-            </div>
+            </RetroCard>
         </div>
     );
 };

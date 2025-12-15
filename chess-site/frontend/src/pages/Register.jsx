@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import RetroCard from '../components/common/RetroCard';
+import RetroButton from '../components/common/RetroButton';
 
 const Register = () => {
     const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -25,13 +27,17 @@ const Register = () => {
 
     return (
         <div className="flex items-center justify-center" style={{ minHeight: '80vh' }}>
-            <div className="retro-card" style={{ width: '100%', maxWidth: '400px' }}>
-                <div className="retro-title-bar">
-                    <span>Register.EjudgeChess</span>
-                    <div style={{ display: 'flex', gap: '4px' }}>
-                        <div style={{ width: '12px', height: '12px', border: '2px solid black', background: 'white' }}></div>
+            <RetroCard
+                style={{ width: '100%', maxWidth: '400px' }}
+                title={
+                    <div className="flex justify-between items-center w-full">
+                        <span>Register.EjudgeChess</span>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                            <div style={{ width: '12px', height: '12px', border: '2px solid black', background: 'white' }}></div>
+                        </div>
                     </div>
-                </div>
+                }
+            >
 
                 <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', fontFamily: 'inherit' }}>NEW USER</h2>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -65,14 +71,14 @@ const Register = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="retro-btn primary" disabled={isLoading} style={{ marginTop: '1rem' }}>
+                    <RetroButton type="submit" disabled={isLoading} style={{ marginTop: '1rem' }}>
                         {isLoading ? 'PROCESSING...' : 'CREATE ACCOUNT'}
-                    </button>
+                    </RetroButton>
                 </form>
                 <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
                     EXISTING USER? <Link to="/login">LOGIN.EXE</Link>
                 </div>
-            </div>
+            </RetroCard>
         </div>
     );
 };

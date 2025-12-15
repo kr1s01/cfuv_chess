@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { gameAPI } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import RetroCard from '../components/common/RetroCard';
+import RetroButton from '../components/common/RetroButton';
 
 const Dashboard = () => {
     const [games, setGames] = useState([]);
@@ -42,19 +44,22 @@ const Dashboard = () => {
 
     return (
         <div className="container" style={{ paddingBottom: '2rem' }}>
-            <div className="retro-card">
-                <div className="retro-title-bar">
-                    <span>GAMES_DIRECTORY.SYS</span>
-                    <div style={{ display: 'flex', gap: '4px' }}>
-                        <div style={{ width: '12px', height: '12px', border: '2px solid black', background: 'white' }}></div>
+            <RetroCard
+                title={
+                    <div className="flex justify-between items-center w-full">
+                        <span>GAMES_DIRECTORY.SYS</span>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                            <div style={{ width: '12px', height: '12px', border: '2px solid black', background: 'white' }}></div>
+                        </div>
                     </div>
-                </div>
+                }
+            >
 
                 <div className="flex justify-between items-center" style={{ marginBottom: '1rem', borderBottom: '2px solid black', paddingBottom: '1rem' }}>
                     <div style={{ fontWeight: 'bold' }}>{games.length} ACTIVE PROCESS(ES)</div>
-                    <button onClick={createGame} className="retro-btn">
+                    <RetroButton onClick={createGame}>
                         + NEW_GAME.EXE
-                    </button>
+                    </RetroButton>
                 </div>
 
                 <div style={{ display: 'grid', gap: '1rem' }}>
@@ -88,12 +93,12 @@ const Dashboard = () => {
 
                                 <div>
                                     {game.status === 'waiting' ? (
-                                        <button onClick={() => joinGame(game.id)} className="retro-btn">
+                                        <RetroButton onClick={() => joinGame(game.id)}>
                                             JOIN
-                                        </button>
+                                        </RetroButton>
                                     ) : (
-                                        <Link to={`/game/${game.id}`} className="retro-btn">
-                                            VIEW
+                                        <Link to={`/game/${game.id}`}>
+                                            <RetroButton>VIEW</RetroButton>
                                         </Link>
                                     )}
                                 </div>
@@ -101,7 +106,7 @@ const Dashboard = () => {
                         ))
                     )}
                 </div>
-            </div>
+            </RetroCard>
         </div>
     );
 };

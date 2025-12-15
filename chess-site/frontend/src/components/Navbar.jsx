@@ -33,13 +33,13 @@ const Navbar = () => {
                     {user ? (
                         <>
                             <span style={{ fontWeight: 'bold' }}>Hello, {user.username} ({user.rating})</span>
-                            <Link to="/dashboard" className="retro-btn">Dashboard</Link>
+                            <a href="/dashboard" className="retro-btn">Dashboard</a>
                             <button onClick={handleLogout} className="retro-btn">Logout</button>
                         </>
                     ) : (
                         <>
                             <Link to="/login" className="retro-btn">Login</Link>
-                            <Link to="/register" className="retro-btn primary">Register</Link>
+                            <Link to="/register" className="retro-btn">Register</Link>
                         </>
                     )}
                 </div>
