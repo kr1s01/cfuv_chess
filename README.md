@@ -23,15 +23,46 @@ Welcome to the **CFUV Chess Platform**, a comprehensive web application for play
 - **Styling**: CSS Modules / Standard CSS
 - **State Management**: React Hooks
 
-## 📋 Prerequisites
+## 🐳 Docker Setup (Recommended)
 
+The easiest way to run the platform is using Docker Compose. This will automatically set up the PostgreSQL database, backend service, and frontend development server.
+
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Quick Start
+1. Navigate to the `chess-site` directory:
+   ```bash
+   cd chess-site
+   ```
+2. Build and start the containers:
+   ```bash
+   docker compose up --build
+   ```
+3. Access the application:
+   - **Frontend**: `http://localhost:5173`
+   - **Backend API**: `http://localhost:8000`
+   - **Database (Internal)**: Port `5432`
+   - **Database (External mapping)**: Port `5433` (to avoid conflicts with local Postgres)
+
+### Management Commands
+- **Stop containers**: `docker compose down`
+- **View logs**: `docker compose logs -f`
+- **Rebuild after changes**: `docker compose up --build`
+- **Clean up volumes**: `docker compose down -v`
+
+---
+
+## 🚀 Manual Installation & Setup (Alternative)
+
+### 📋 Prerequisites
 Before you begin, ensure you have the following installed:
 - **Python 3.8+**
 - **Node.js 16+** & **npm**
 - **PostgreSQL** (running locally or accessible via URL)
 
-## 🔑 Environment Variables
-
+### 🔑 Environment Variables
 The backend requires specific environment variables to function correctly.
 
 1. Create a `.env` file in the `chess-site/backend` directory.
@@ -39,19 +70,9 @@ The backend requires specific environment variables to function correctly.
 
 ```env
 # chess-site/backend/.env
-
-# Security key for JWT token generation
 SECRET_KEY=your_super_secret_key_here
-
-# Database Connection URL (PostgreSQL)
-# Format: postgresql+asyncpg://<user>:<password>@<host>:<port>:<db_name>
 DATABASE_URL=postgresql+asyncpg://postgres:password@localhost/chess_db
 ```
-
-> [!IMPORTANT]  
-> Make sure `DATABASE_URL` matches your local PostgreSQL configuration. If you haven't created the database yet, you'll need to create one named `chess_db` (or whatever name you use in the URL).
-
-## 🚀 Installation & Setup
 
 ### 1. Backend Setup
 

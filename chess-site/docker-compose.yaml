@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: chess_db
+    environment:
+      POSTGRES_USER: chess_user
+      POSTGRES_PASSWORD: chess_password
+      POSTGRES_DB: chess_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chess_user -d chess_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - chess_net
+
+  backend:
+    build: ./backend
+    container_name: chess_backend
+    volumes:
+      - ./backend:/app
+      - /app/venv # Don't overwrite container venv with host venv if it exists
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://chess_user:chess_password@db:5432/chess_db
+      - SECRET_KEY=your_secret_key_here # Replace with actual key or use .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - chess_net
+
+  frontend:
+    build: ./frontend
+    container_name: chess_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - chess_net
+
+networks:
+  chess_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
